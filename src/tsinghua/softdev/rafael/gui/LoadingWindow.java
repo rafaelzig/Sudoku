@@ -1,16 +1,8 @@
 package tsinghua.softdev.rafael.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Window;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
 
 /**
  * A subclass of Window which adds functionality to display progress bars and
@@ -18,30 +10,27 @@ import javax.swing.border.TitledBorder;
  *
  * @author Rafael da Silva Costa - 2015280364
  */
-@SuppressWarnings("serial")
 class LoadingWindow extends Window
 {
+	private static final long serialVersionUID = 1461280336148445723L;
 	/**
 	 * Progress bar utilised on this window.
 	 */
-	private JProgressBar		progressBar;
+	private JProgressBar progressBar;
 
 	/**
 	 * Constructs a new instance of LoadingWindow to display an animated GIF
 	 * with the specified parent and title.
 	 *
-	 * @param owner
-	 *            : Window from which the dialog is displayed.
-	 * @param title
-	 *            : Title of this window.
+	 * @param owner : Window from which the dialog is displayed.
+	 * @param title : Title of this window.
 	 */
 	LoadingWindow(Window owner, String title)
 	{
 		super(owner);
 		setLayout(new BorderLayout(5, 5));
 
-		final JLabel lblTitle = new JLabel(new ImageIcon(getClass().getResource(
-				"res/loading.gif")));
+		JLabel lblTitle = new JLabel(new ImageIcon(getClass().getResource("res/loading.gif")));
 		lblTitle.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createRaisedBevelBorder(), title, TitledBorder.CENTER,
 				TitledBorder.TOP, new Font("Dialog", Font.BOLD, 9), Color.BLACK));
@@ -54,12 +43,9 @@ class LoadingWindow extends Window
 	 * Constructs a new instance of LoadingWindow to display a progress bar with
 	 * the specified parent, title and max progress.
 	 *
-	 * @param parent
-	 *            : Parent window from which this object originates.
-	 * @param title
-	 *            : Title of this window.
-	 * @param max
-	 *            : Max progress utilised by the progress bar.
+	 * @param parent : Parent window from which this object originates.
+	 * @param title  : Title of this window.
+	 * @param max    : Max progress utilised by the progress bar.
 	 */
 	LoadingWindow(Window parent, String title, int max)
 	{
@@ -68,7 +54,7 @@ class LoadingWindow extends Window
 		progressBar.setStringPainted(true);
 
 		setLayout(new BorderLayout(5, 5));
-		final JPanel pnlLoadingBar = new JPanel();
+		JPanel pnlLoadingBar = new JPanel();
 		pnlLoadingBar.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createRaisedBevelBorder(), title, TitledBorder.CENTER,
 				TitledBorder.TOP, new Font("Dialog", Font.BOLD, 9), Color.BLACK));
@@ -81,8 +67,7 @@ class LoadingWindow extends Window
 	/**
 	 * Sets the progress of the progress bar to the specified level.
 	 *
-	 * @param progress
-	 *            : Progress level to be set.
+	 * @param progress : Progress level to be set.
 	 */
 	void setProgress(int progress)
 	{

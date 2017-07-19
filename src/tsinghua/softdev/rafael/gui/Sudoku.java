@@ -18,11 +18,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@SuppressWarnings("serial")
 class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 		TableModelListener
 {
-	private SwingWorker<Void, Void>	worker;
+	private static final long serialVersionUID = -5766496294391617615L;
+	private SwingWorker<Void, Void> worker;
 	private BufferedReader			in;
 	private PrintWriter				out;
 	private SudokuBoard				board;
@@ -87,7 +87,7 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 		setVisible(true);
 	}
 
-	private void listen()
+	void listen()
 	{
 		while (!worker.isCancelled())
 		{
@@ -120,7 +120,7 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 							move.getValue()), move.getRow(), move.getColumn()));
 				}
 			}
-			catch (IOException e)
+			catch (IOException ignored)
 			{
 				SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(this,
 						"An error has occured whilst communicating with the remote host",
@@ -137,14 +137,14 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 			JPanel pnlNorth = new JPanel(); // FlowLayout
 
 			pnlNorth.add(new JLabel("Game Difficulty:"));
-			cbbDifficulty = new JComboBox<Integer>(DIFFICULTIES);
+			cbbDifficulty = new JComboBox<>(DIFFICULTIES);
 			pnlNorth.add(cbbDifficulty);
 
 			btnStartGame = new JButton(SudokuConstants.START_GAME_ACTION);
 			btnStartGame.addActionListener(this);
 			pnlNorth.add(btnStartGame);
 
-			add(pnlNorth, BorderLayout.NORTH);
+			add(pnlNorth, BorderLayout.PAGE_START);
 		}
 
 		board = new SudokuBoard(new SudokuBoardModel());
@@ -152,9 +152,9 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 		board.setEnabled(false);
 		add(board, BorderLayout.CENTER);
 
-		lblTimer = new JLabel("0", JLabel.CENTER);
+		lblTimer = new JLabel("0", SwingConstants.CENTER);
 		lblTimer.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
-		add(lblTimer, BorderLayout.SOUTH);
+		add(lblTimer, BorderLayout.PAGE_END);
 
 		timer = new Timer(1000, this);
 		timer.setActionCommand(SudokuConstants.TIMER_ACTION);
@@ -163,7 +163,7 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 	/**
 	 * Closes the Sudoku window disposing of its resources.
 	 */
-	private void close()
+	void close()
 	{
 		int userResponse = JOptionPane.showConfirmDialog(this,
 				"Are you sure you would like to quit the current session?",

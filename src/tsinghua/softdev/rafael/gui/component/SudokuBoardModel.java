@@ -6,6 +6,7 @@ import tsinghua.softdev.rafael.data.SudokuGenerator;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * This class extends AbstractTableModel, inheriting its default functionality,
@@ -15,10 +16,10 @@ import java.util.Arrays;
  * @author Rafael da Silva Costa - 2015280364
  * @version 1.0
  */
-@SuppressWarnings("serial")
 public class SudokuBoardModel extends AbstractTableModel implements SudokuConstants
 {
-	private final Cell[][]	board		= new Cell[BOARD_SIZE][BOARD_SIZE];
+	private static final long serialVersionUID = 812939855293250184L;
+	private final Cell[][] board = new Cell[BOARD_SIZE][BOARD_SIZE];
 	private final int[][]	rowValues	= new int[BOARD_SIZE][BOARD_SIZE];
 	private final int[][]	colValues	= new int[BOARD_SIZE][BOARD_SIZE];
 	private final int[][]	blockValues	= new int[BOARD_SIZE][BOARD_SIZE];
@@ -84,7 +85,7 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 		int value = cell.getValue();
 		int oldValue = board[row][col].getValue();
 
-		if (cell.equals(oldCell))
+		if (Objects.equals(cell, oldCell))
 		{
 			return;
 		}

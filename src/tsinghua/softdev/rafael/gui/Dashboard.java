@@ -19,19 +19,22 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("serial")
 class Dashboard extends JFrame implements SudokuConstants, ActionListener
 {
-	private JFormattedTextField[]				txtHostIP;
-	private JFormattedTextField					txtHostPort, txtMyPort;
-	private JButton								btnHost, btnJoin;
-	private LoadingWindow						loading;
-	private SwingWorker<ResourceBundle, Void>	worker;
-	private Timer								timer;
-	private ExceptionHandler					handler;
+	private static final long serialVersionUID = 8287590205180240782L;
+	private JFormattedTextField[] txtHostIP;
+	JFormattedTextField txtHostPort;
+	JFormattedTextField txtMyPort;
+	private JButton btnHost;
+	private JButton btnJoin;
+	LoadingWindow loading;
+	private SwingWorker<ResourceBundle, Void> worker;
+	Timer            timer;
+	ExceptionHandler handler;
 
 	public static void main(String[] args)
 	{
@@ -132,35 +135,35 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 		pnlEast.add(btnHost);
 		pnlEast.add(btnJoin);
 
-		pnlWest.add(new JLabel("AI Level"), BorderLayout.WEST);
-		
+		pnlWest.add(new JLabel("AI Level"), BorderLayout.LINE_START);
+
 		JRadioButton rbtNormal = new JRadioButton("Normal");
 		rbtNormal.setEnabled(false); // Not yet implemented
 		pnlWest.add(rbtNormal, BorderLayout.CENTER);
-		
+
 		JRadioButton rbtSmart = new JRadioButton("Smart");
 		rbtSmart.setEnabled(false); // Not yet implemented
-		pnlWest.add(rbtSmart, BorderLayout.EAST);
-		
+		pnlWest.add(rbtSmart, BorderLayout.LINE_END);
+
 		JButton btnStartGame = new JButton(START_GAME_ACTION);
 		btnStartGame.addActionListener(this);
-		pnlWest.add(btnStartGame, BorderLayout.SOUTH);
+		pnlWest.add(btnStartGame, BorderLayout.PAGE_END);
 
-		pnlCenter.add(pnlNorth, BorderLayout.NORTH);
-		pnlCenter.add(pnlSouth, BorderLayout.SOUTH);
+		pnlCenter.add(pnlNorth, BorderLayout.PAGE_START);
+		pnlCenter.add(pnlSouth, BorderLayout.PAGE_END);
 		add(pnlCenter, BorderLayout.CENTER);
-		add(pnlEast, BorderLayout.EAST);
-		add(pnlWest, BorderLayout.WEST);
+		add(pnlEast, BorderLayout.LINE_END);
+		add(pnlWest, BorderLayout.LINE_START);
 	}
 
 	/**
 	 * Loads the icons from resources.
-	 * 
+	 *
 	 * @return List of icons to be used in the application.
 	 */
 	private List<Image> getIcons()
 	{
-		List<Image> icons = new LinkedList<Image>();
+		List<Image> icons = new LinkedList<>();
 
 		for (String path : ICONS)
 		{
@@ -206,7 +209,7 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 			public ResourceBundle doInBackground()
 			{
 				ResourceBundle b = new ResourceBundle();
-				
+
 				try
 				{
 					b.setServerSocket(new ServerSocket((int) txtMyPort.getValue()));
@@ -222,23 +225,24 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 
 							return b;
 						}
-						catch (SocketTimeoutException e)
+						catch (SocketTimeoutException ignored)
 						{
 							// Retry until user cancels or connection
 							// established
 						}
 					}
-					
+
 					b.closeAll();
 				}
 				catch (IOException e)
 				{
 					b.closeAllQuietly();
 					cancel(true);
-					SwingUtilities.invokeLater(() -> {
-						timer.start();
-						handler.handle(e);
-					});
+					SwingUtilities.invokeLater(() ->
+					                           {
+						                           timer.start();
+						                           handler.handle(e);
+					                           });
 				}
 
 				return null;
@@ -259,7 +263,7 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 						b.closeAll();
 						enableButtons();
 					}
-					catch (InterruptedException | ExecutionException | IOException  e)
+					catch (InterruptedException | ExecutionException | IOException e)
 					{
 						handler.handle(e);
 					}
@@ -274,7 +278,7 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 	{
 		// Convert elements to strings and concatenate them, separated by commas
 		String host = Arrays.stream(txtHostIP).map(c -> c.getValue().toString())
-				.collect(Collectors.joining("."));
+		                    .collect(Collectors.joining("."));
 
 		loading = new LoadingWindow(this, "Connecting");
 
@@ -284,23 +288,24 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 			public ResourceBundle doInBackground()
 			{
 				ResourceBundle b = new ResourceBundle();
-				
+
 				try
 				{
 					b.setSocket(new Socket(host, (int) txtHostPort.getValue()));
 					b.setWriter(new PrintWriter(b.getSocket().getOutputStream(), true));
 					b.setReader(new BufferedReader(new InputStreamReader(b.getSocket().getInputStream())));
-					
+
 					return b;
 				}
 				catch (IOException e)
 				{
 					b.closeAllQuietly();
 					cancel(true);
-					SwingUtilities.invokeLater(() -> {
-						timer.start();
-						handler.handle(e);
-					});
+					SwingUtilities.invokeLater(() ->
+					                           {
+						                           timer.start();
+						                           handler.handle(e);
+					                           });
 				}
 
 				return null;
@@ -321,7 +326,7 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 						b.closeAll();
 						enableButtons();
 					}
-					catch (InterruptedException | ExecutionException | IOException  e)
+					catch (InterruptedException | ExecutionException | IOException e)
 					{
 						handler.handle(e);
 					}
@@ -332,18 +337,18 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 		worker.execute();
 	}
 
-	private void toggleButtons(String action)
+	void toggleButtons(String action)
 	{
-		if (action.equals(HOST_ACTION))
+		if (Objects.equals(action, HOST_ACTION))
 		{
 			String curr = btnHost.getText();
 
-			if (curr.equals(HOST_ACTION))
+			if (Objects.equals(curr, HOST_ACTION))
 			{
 				btnHost.setText(CANCEL_ACTION);
 				btnJoin.setEnabled(false);
 			}
-			else if (curr.equals(CANCEL_ACTION))
+			else if (Objects.equals(curr, CANCEL_ACTION))
 			{
 				btnHost.setText(HOST_ACTION);
 				btnHost.setEnabled(false);
@@ -357,9 +362,9 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 	}
 
 	/**
-	 * 
+	 *
 	 */
-	private void enableButtons()
+	void enableButtons()
 	{
 		btnHost.setEnabled(true);
 		btnJoin.setEnabled(true);
