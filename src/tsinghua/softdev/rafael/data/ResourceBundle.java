@@ -88,28 +88,32 @@ public class ResourceBundle
 
 	/**
 	 * TODO
-	 * 
-	 * @throws IOException
 	 */
 	public void closeAll() throws IOException
 	{
 		if (in != null)
+		{
 			in.close();
+		}
 
 		if (out != null)
+		{
 			out.close();
+		}
 
 		if (socket != null)
+		{
 			socket.close();
+		}
 
 		if (serverSocket != null)
+		{
 			serverSocket.close();
+		}
 	}
 
 	/**
 	 * TODO
-	 * 
-	 * @throws IOException
 	 */
 	public void closeAllQuietly()
 	{
@@ -127,7 +131,9 @@ public class ResourceBundle
 		}
 
 		if (out != null)
+		{
 			out.close();
+		}
 
 		if (socket != null)
 		{

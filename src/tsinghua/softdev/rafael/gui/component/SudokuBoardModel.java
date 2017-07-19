@@ -1,18 +1,17 @@
 package tsinghua.softdev.rafael.gui.component;
 
-import java.util.Arrays;
-
-import javax.swing.table.AbstractTableModel;
-
 import tsinghua.softdev.rafael.data.Cell;
 import tsinghua.softdev.rafael.data.SudokuConstants;
 import tsinghua.softdev.rafael.data.SudokuGenerator;
+
+import javax.swing.table.AbstractTableModel;
+import java.util.Arrays;
 
 /**
  * This class extends AbstractTableModel, inheriting its default functionality,
  * it also contains implementations for the abstract methods in order for the
  * Sudoku game to function properly.
- * 
+ *
  * @author Rafael da Silva Costa - 2015280364
  * @version 1.0
  */
@@ -29,7 +28,7 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 		super();
 		initBoard();
 	}
-	
+
 	private void initBoard()
 	{
 		Arrays.stream(board).forEach(array -> Arrays.setAll(array, index -> new Cell()));
@@ -40,6 +39,7 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 		int[][] b = SudokuGenerator.generate(difficulty);
 
 		for (int i = 0; i < board.length; i++)
+		{
 			for (int j = 0; j < board.length; j++)
 			{
 				board[i][j].setValue(b[i][j]);
@@ -50,6 +50,7 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 					setSubsetValue(i, j, b[i][j], true);
 				}
 			}
+		}
 	}
 
 	@Override
@@ -65,15 +66,15 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 	}
 
 	@Override
-	public Cell getValueAt(int row, int col)
+	public Cell getValueAt(int rowIndex, int columnIndex)
 	{
-		return board[row][col];
+		return board[rowIndex][columnIndex];
 	}
 
 	@Override
-	public void setValueAt(Object cell, int row, int col)
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
-		setValueAt((Cell) cell, row, col);
+		setValueAt((Cell) aValue, rowIndex, columnIndex);
 	}
 
 	private void setValueAt(Cell cell, int row, int col)
@@ -84,54 +85,60 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 		int oldValue = board[row][col].getValue();
 
 		if (cell.equals(oldCell))
+		{
 			return;
+		}
 
 		board[row][col] = cell;
 
 		if (!cell.isEmpty())
 		{
 			if (!oldCell.isEmpty())
+			{
 				setSubsetValue(row, col, oldValue, false);
+			}
 
 			setSubsetValue(row, col, value, true);
 
 		}
 		// cell.isEmpty()
 		else if (!oldCell.isEmpty())
+		{
 			setSubsetValue(row, col, oldValue, false);
+		}
 
 		fireTableCellUpdated(row, col);
 	}
 
 	@Override
-	public Class<?> getColumnClass(int col)
+	public Class<?> getColumnClass(int columnIndex)
 	{
 		return Cell.class;
 	}
 
-	public boolean isCellEditable(int row, int col)
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
-		return !board[row][col].isFixed();
+		return !board[rowIndex][columnIndex].isFixed();
 	}
 
 	/**
 	 * TODO
-	 * 
-	 * @param col
-	 * @return
 	 */
 	boolean isDuplicate(int row, int col)
 	{
 		int value = board[row][col].getValue();
 
 		if (value == MIN_VALUE)
+		{
 			return false;
+		}
 
 		return rowValues[row][value - 1] > 1 || colValues[col][value - 1] > 1
 				|| blockValues[getBlockNumber(row, col)][value - 1] > 1;
 	}
 
-	private int getBlockNumber(int row, int col)
+	private static int getBlockNumber(int row, int col)
 	{
 		return (row / BLOCK_SIZE) * BLOCK_SIZE + (col / BLOCK_SIZE);
 	}
@@ -141,9 +148,9 @@ public class SudokuBoardModel extends AbstractTableModel implements SudokuConsta
 		return isValid(rowValues) && isValid(colValues) && isValid(blockValues);
 	}
 
-	private boolean isValid(int[][] values)
+	private static boolean isValid(int[][] values)
 	{
-		return !Arrays.stream(values).flatMapToInt(Arrays::stream).anyMatch(n -> n != 1);
+		return Arrays.stream(values).flatMapToInt(Arrays::stream).noneMatch(n -> n != 1);
 	}
 
 	private void setSubsetValue(int row, int col, int value, boolean isAddition)

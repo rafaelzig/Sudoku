@@ -172,7 +172,9 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 		if (userResponse == JOptionPane.YES_OPTION)
 		{
 			if (out == null)
+			{
 				dispose();
+			}
 			else
 			{
 				out.println(new Move(GAME_ENDED));
@@ -210,11 +212,13 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 			out.println(new Move(GAME_STARTED));
 
 			for (int i = 0; i < BOARD_SIZE; i++)
+			{
 				for (int j = 0; j < BOARD_SIZE; j++)
 				{
 					int value = ((Cell) board.getValueAt(i, j)).getValue();
 					out.println(new Move(value, i, j, GAME_INIT));
 				}
+			}
 		}
 	}
 
@@ -228,7 +232,9 @@ class Sudoku extends JDialog implements SudokuConstants, ActionListener,
 			Cell cell = (Cell) board.getValueAt(row, col);
 
 			if (cell.isHost())
+			{
 				out.println(new Move(cell.getValue(), row, col));
+			}
 		}
 
 		if (((SudokuBoardModel) e.getSource()).isWon())

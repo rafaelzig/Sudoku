@@ -11,7 +11,9 @@ public class Cell implements SudokuConstants
 		int temp = Integer.parseInt(value);
 
 		if (temp < MIN_VALUE || temp > MAX_VALUE)
+		{
 			throw new NumberFormatException();
+		}
 
 		this.value = Integer.parseInt(value);
 		this.isHost = true;
@@ -87,16 +89,26 @@ public class Cell implements SudokuConstants
 	public boolean equals(Object obj)
 	{
 		if (this == obj)
+		{
 			return true;
+		}
 		if (obj == null)
+		{
 			return false;
+		}
 		if (getClass() != obj.getClass())
+		{
 			return false;
+		}
 		Cell other = (Cell) obj;
 		if (isHost != other.isHost)
+		{
 			return false;
+		}
 		if (value != other.value)
+		{
 			return false;
+		}
 		return true;
 	}
 

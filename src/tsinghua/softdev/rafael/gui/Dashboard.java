@@ -105,9 +105,13 @@ class Dashboard extends JFrame implements SudokuConstants, ActionListener
 			pnlSouth.add(txtHostIP[i]);
 
 			if (i < txtHostIP.length - 1)
+			{
 				pnlSouth.add(new JLabel("."));
+			}
 			else
+			{
 				pnlSouth.add(new JLabel(":"));
+			}
 		}
 
 		txtHostPort = new JFormattedTextField(portFormatter);
